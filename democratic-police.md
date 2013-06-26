@@ -58,7 +58,7 @@ From the perspective of the occupation government, the official policy for purgi
 
 ## Education and Propaganda for a Democratic Police
 
-{section on 『民主警察』and role of advisers in progress}
+{section on 『民主警察』and role of police advisers in progress}
 
 [^30]: General Headquarters, Commander-in-Chief, United States Army Forces, Pacific, 1946-1947, *Summation of United States Army Military Government Activities in Korea*, vol. 8, May, 1946, 28.
 
@@ -91,9 +91,9 @@ Office of the Military Governor, Bureau of Police. Copy in Hausman Papers Box 26
 
 [^42]: *Ibid.*, 38.
 
-[^43]: 
+[^43]: @@@
 
-[^44]: 
+[^44]: @@@ 地方美軍政資料集
 
 [^45]: *Summation of Activities in Korea* vol @@@, August, 1946, 100.
 
