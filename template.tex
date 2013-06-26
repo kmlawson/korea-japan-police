@@ -1,0 +1,314 @@
+%!TEX TS-program = xelatex
+\documentclass[12pt,a4paper]{scrartcl}  
+% added a4paper which should work with most classes to change paper size 
+% The declaration of the document class:
+\usepackage[fallback]{xeCJK}[2011/05/01 v2.3.19]
+\setCJKmainfont{Hiragino Mincho Pro} % for Cn & Jp
+\setCJKfallbackfamilyfont{\CJKrmdefault}{AppleMyungjo} % for Kr
+% I had to use this "fallback" option in order to get it so that it would
+% support Japanese, Chinese, and Korean. 
+
+% -- We are in swanky unicode, XeTeX land, and must now import these packages:
+\usepackage{fontspec,xltxtra,xunicode}
+% fontspec means we can specify pretty much any font.
+% Because we are using XeTeX material,
+% this template needs to be called with the `--xetex` flag. 
+ 
+\usepackage[authordate,backend=biber,bibencoding=utf8]{biblatex-chicago} 
+ 
+% `babel`: 
+% The `babel` package, among other things, lets you determine what 
+% language you are using in a given stretch of text, so that typesetting 
+% will go well. Here we specify that mostly, we are speaking English:
+\usepackage[english]{babel}
+\usepackage{longtable}
+% had to add this for table that goes across pages or something?
+ 
+ 
+% Margins, etc:
+% the `geometry` package makes for convenient adjusting of margins, which is what
+% you asked about.  Of course it can do much more, even make coffee for you:
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+% so if you just keep a copy of this template in the directory you are working in, you
+% can adjust the margins by going into this file and messing with the margins.
+% the syntax is very unforgiving, but permits 3cm and 2.5in and some other things.
+ 
+\setmainfont [Ligatures={Common,TeX}, Numbers={OldStyle}]{Baskerville}
+ 
+% Heading styles:
+% These commands keep the koma system from making stupid sans serif section headings
+\setkomafont{title}{\rmfamily\mdseries\upshape\normalsize}
+\setkomafont{sectioning}{\bfseries\normalsize}
+% \setkomafont{sectioning}{\rmfamily\mdseries\upshape\normalsize}
+\setkomafont{descriptionlabel}{\rmfamily\mdseries\upshape\normalsize}
+ 
+ 
+ 
+% I'm puzzled why I have this foonote speciality, 
+% I wonder if it's part of my problem I've been having, but wont look
+% into it now. 
+\usepackage[flushmargin]{footmisc} 
+% \usepackage[hang,flushmargin]{footmisc}
+ 
+ 
+% So much for my personal template.
+ 
+ 
+% Everything that follows is copied from the pandoc default template:
+% I will interpolate a few comments, the comments that are in 
+% the default template will be marked % -- 
+ 
+% Paragraph format:
+% Pandoc prefers unindented paragraphs in the European style:
+\setlength{\parindent}{0pt}
+%  ... with paragraph breaks marked by a slight lengthening of 
+% the space between paragraphs:
+\setlength{\parskip}{10pt plus 2pt minus 1pt}
+ 
+% Page format:
+\pagestyle{plain}  
+% The default `plain` pagestyle just numbers the pages,
+ 
+% Footnotes
+% if you have code in your footnotes, the million macro march 
+% kind of bumps into itself.
+% Pandoc, having just rendered your text into LaTeX, 
+% knows whether the 'variable' `verbatim-in-note` is True, and 
+% If it is, it asks for a  LaTeX package that solves the dilemma:
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+ 
+% Lists formatting: 
+% note sure what 'fancy enums' are; something to do with lists, 
+% as the further comment suggests: 
+$if(fancy-enums)$
+% -- Redefine labelwidth for lists; otherwise, the enumerate package will cause
+% -- markers to extend beyond the left margin.
+\makeatletter\AtBeginDocument{%
+  \renewcommand{\@listi}
+    {\setlength{\labelwidth}{4em}}
+}\makeatother
+\usepackage{enumerate}
+$endif$
+ 
+ 
+% Table formatting: 
+ 
+% $if(tables)$
+% \usepackage{array}
+ 
+% -- This is needed because raggedright in table elements redefines \\:
+% \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+% \let\PBS=\PreserveBackslash
+ 
+% $endif$
+ 
+ 
+% Subscripts:
+% Pandoc remembers whether you used subscripts, assigning True to 
+% its `subscript` variable 
+% It then needs to adopt a default with an incantation like this:
+$if(subscript)$
+\newcommand{\textsubscr}[1]{\ensuremath{_{\scriptsize\textrm{#1}}}}
+$endif$
+ 
+ 
+% Web-style links:
+ 
+\usepackage[breaklinks=true]{hyperref}
+\hypersetup{colorlinks,%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black}
+$if(url)$
+\usepackage{url}
+$endif$
+
+
+% List of name affixes excluding Roman numerals
+\forcsvlist{\listadd\nameaffixlist}{Junior,Senior}
+
+\newcommand{\ifnameaffix}[1]{%
+  \ifboolexpr{ test {\ifrmnum{#1}} or test {\ifinlist{#1}{\nameaffixlist}} }}
+
+% Based on definitions from biblatex.def    
+\DeclareNameFormat{labelname}{%
+  \ifboolexpr{ test {\ifblank{#7}} or test {\ifnameaffix{#7}} }
+    {\ifcase\value{uniquename}%
+       \usebibmacro{name:last}{#1}{#3}{#5}{#7}%
+     \or
+       \ifuseprefix
+         {\usebibmacro{name:first-last}{#1}{#4}{#5}{#8}}
+         {\usebibmacro{name:first-last}{#1}{#4}{#6}{#8}}%
+     \or
+       \usebibmacro{name:first-last}{#1}{#3}{#5}{#7}%
+     \fi}%
+    {\ifnumequal{\value{uniquename}}{0}%
+       {\usebibmacro{name:cjk}{#1}{}{}}
+       {\usebibmacro{name:cjk}{#1}{#3}{}}}%
+  \usebibmacro{name:andothers}}
+
+\DeclareNameFormat{first-last}{%
+  \ifboolexpr{ test {\ifblank{#7}} or test {\ifnameaffix{#7}} }
+    {\iffirstinits
+       {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
+       {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}}
+    {\usebibmacro{name:cjk}{#1}{#3}{#7}}%
+  \usebibmacro{name:andothers}}
+
+\DeclareNameFormat{last-first}{%
+  \ifboolexpr{ test {\ifblank{#7}} or test {\ifnameaffix{#7}} }
+    {\iffirstinits
+       {\usebibmacro{name:last-first}{#1}{#4}{#5}{#7}}
+       {\usebibmacro{name:last-first}{#1}{#3}{#5}{#7}}}
+    {\usebibmacro{name:cjk}{#1}{#3}{#7}}%
+  \usebibmacro{name:andothers}}
+
+\DeclareNameFormat{last-first/first-last}{%
+  \ifboolexpr{ test {\ifblank{#7}} or test {\ifnameaffix{#7}} }
+    {\ifnumequal{\value{listcount}}{1}
+       {\iffirstinits
+          {\usebibmacro{name:last-first}{#1}{#4}{#5}{#7}}
+          {\usebibmacro{name:last-first}{#1}{#3}{#5}{#7}}%
+        \ifblank{#3#5}
+          {}
+          {\usebibmacro{name:revsdelim}}}
+       {\iffirstinits
+          {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
+          {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}}}
+    {\usebibmacro{name:cjk}{#1}{#3}{#7}}%
+  \usebibmacro{name:andothers}}
+
+\newbibmacro*{name:cjk}[3]{%
+  \usebibmacro{name:delim}{#2#3#1}%
+  \usebibmacro{name:hook}{#2#3#1}%
+  \mkbibnamelast{#1}%
+  \ifblank{#2}{}{\bibnamedelimd\mkbibnamefirst{#2}}%
+  \ifblank{#3}{}{\bibnamedelimd\mkbibnameaffix{#3}}}
+
+% Based on definitions from biblatex-chicago cbx    
+\DeclareFieldFormat[book]{title}{%
+  \mkbibemph{#1}%
+  \iffieldundef{titleaddon}{\isdot}{\nopunct}}
+
+\DeclareFieldFormat{booktitle}{%
+  \mkbibemph{#1}%
+  \iffieldundef{booktitleaddon}{}{\nopunct}}
+
+\DeclareFieldFormat{maintitle}{%
+  \mkbibemph{#1}%
+  \iffieldundef{maintitleaddon}{}{\nopunct}}
+
+\DeclareFieldFormat[article]{title}{%
+  \iffieldundef{title}{}{\mkbibquote{#1}}%
+  \iffieldundef{titleaddon}{\isdot}{\nopunct}}
+
+\DeclareFieldFormat{usere}{\mkbibparens{#1}}
+% This all taken from:
+ 
+ 
+% Images. 
+% In ye olde LaTeX one could only import a limited range of image
+% types, e.g. the forgotten .eps files.  Or else one simply drew the image with suitable
+% commands and drawing packages.  Today we want to import .jpg files we make with 
+% our smart phones or whatever:
+ 
+$if(graphics)$
+\usepackage{graphicx}
+% -- we will generate all images so they have a width \maxwidth. this means
+% -- that they will get their normal width if they fit onto the page, but
+% -- are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\gin@nat@width>\linewidth\linewidth
+\else\gin@nat@width\fi}
+\makeatother
+\let\oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\oldincludegraphics[width=\maxwidth]{#1}}
+$endif$
+ 
+ 
+ 
+% section numbering.  
+% here again is a variable you can specify on the commandline
+% `markdown2pdf my.txt --number-sections --xetex --template=/wherever/this/is -o my.pdf`
+$if(numbersections)$
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+ 
+% footnotes: 
+% wait, didn't we already discuss the crisis of code in footnotes?  
+% evidently the order of unfolding of macros required that
+% we import a package to deal with them earlier
+% and issue a command it defines now. (or maybe that's not the reason;
+% very often the order does matter as the insane system of macro expansion
+% must take place by stages.)
+$if(verbatim-in-note)$
+\verbatimfootnotes % -- allows verbatim text in footnotes
+$endif$
+ 
+% other stuff you specify on the command line:
+% you can include stuff for the header from a file specified on the command line;
+% i've never done this, but that stuff will go here:
+$for(header-includes)$
+$header-includes$
+$endfor$
+ 
+% title, authors, date.
+% if you specified title authors and date at the start of 
+% your pandoc-markdown file, pandoc knows the 'values' of the
+% variables: title authors date and fills them in.
+ 
+$if(title)$
+\title{$title$}
+$endif$
+\author{$for(author)$$author$$sep$\\$endfor$}
+$if(date)$
+\date{$date$}
+$endif$
+ 
+% at last: 
+% the document itself!:
+ 
+% after filling in all these blanks above, or erasing them 
+% where they are not needed, pandoc has finished writing the 
+% famous latex *preamble* for your document.
+% now comes the all-important command \begin{document}
+% which as you can see, will be paired with an \end{document} at the end.
+% pandoc knows whether you have a title, and has already
+% specified what it is; if so, it demands that the title be rendered.  
+% pandoc knows whether you want a table of contents, you
+% specify this on the command line.
+% then, after fiddling with alignments, there comes the real
+% business: pandoc slaps its rendering of your text in the place of
+% the variable `body`
+% it then concludes the document it has been writing. 
+ 
+\begin{document}
+ 
+ 
+$if(title)$
+\maketitle
+$endif$
+ 
+$if(toc)$
+\tableofcontents
+ 
+$endif$
+ 
+ 
+$if(alignment)$
+\begin{$alignment$}
+$endif$
+ 
+$body$
+ 
+%$if(alignment)$
+\end{$alignment$}
+$endif$
+ 
+ 
+\end{document}
